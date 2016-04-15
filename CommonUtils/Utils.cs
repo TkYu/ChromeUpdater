@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -169,6 +170,65 @@ namespace CommonUtils
             var hc = new HttpClient { Timeout = TimeSpan.FromMilliseconds(timeout) };
             var str = await hc.GetStringAsync($"https://api.shuax.com/static/update/GreenChrome.json?g={Guid.NewGuid().ToString("N")}");
             return SimpleJson.SimpleJson.DeserializeObject<GCUpdateRss>(str);
+        }
+        #endregion
+
+        #region Other
+        public static ushort GetImageArchitecture(string filepath)
+        {
+            using (var stream = new FileStream(filepath, FileMode.Open, FileAccess.Read))
+            using (var reader = new BinaryReader(stream))
+            {
+                //check the MZ signature to ensure it's a valid Portable Executable image
+                if (reader.ReadUInt16() != 23117)
+                    throw new BadImageFormatException("Not a valid Portable Executable image", filepath);
+
+                // seek to, and read, e_lfanew then advance the stream to there (start of NT header)
+                stream.Seek(0x3A, SeekOrigin.Current);
+                stream.Seek(reader.ReadUInt32(), SeekOrigin.Begin);
+
+                // Ensure the NT header is valid by checking the "PE\0\0" signature
+                if (reader.ReadUInt32() != 17744)
+                    throw new BadImageFormatException("Not a valid Portable Executable image", filepath);
+
+                // seek past the file header, then read the magic number from the optional header
+                stream.Seek(20, SeekOrigin.Current);
+                return reader.ReadUInt16();
+            }
+        }
+        //public const ushort PE32 = 0x10b;
+        public const ushort PE32P = 0x20b;
+        public static bool IsX64Image(string filepath)
+        {
+
+            return GetImageArchitecture(filepath) == PE32P;
+        }
+
+        public static bool IsAdministrator()
+        {
+            //bool value to hold our return value
+            bool isAdmin;
+            WindowsIdentity user = null;
+            try
+            {
+                //get the currently logged in user
+                user = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(user);
+                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                isAdmin = false;
+            }
+            catch (Exception)
+            {
+                isAdmin = false;
+            }
+            finally
+            {
+                user?.Dispose();
+            }
+            return isAdmin;
         }
         #endregion
     }
