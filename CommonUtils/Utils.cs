@@ -357,6 +357,45 @@ namespace CommonUtils
             }
         }
 
+        public static async Task DownloadFileAsync(string url,string fileName, IProgress<double> progress, System.Threading.CancellationToken token)
+        {
+            if(File.Exists(fileName))File.Delete(fileName);
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"The request returned with HTTP status code {response.StatusCode}");
+                }
+                var total = response.Content.Headers.ContentLength ?? -1L;
+                var canReportProgress = total != -1 && progress != null;
+                using (var sFile = new FileStream(fileName, FileMode.CreateNew))
+                using (var stream = await response.Content.ReadAsStreamAsync())
+                {
+                    var totalRead = 0L;
+                    var buffer = new byte[4096];
+                    var isMoreToRead = true;
+                    do
+                    {
+                        token.ThrowIfCancellationRequested();
+                        var read = await stream.ReadAsync(buffer, 0, buffer.Length, token);
+                        if (read == 0)
+                        {
+                            isMoreToRead = false;
+                        }
+                        else
+                        {
+                            var data = new byte[read];
+                            buffer.ToList().CopyTo(0, data, 0, read);
+                            await sFile.WriteAsync(data, 0, data.Length, token);
+                            totalRead += read;
+                            if (canReportProgress)
+                                progress.Report(totalRead * 1d / (total * 1d) * 100);
+                        }
+                    } while (isMoreToRead);
+                }
+            }
+        }
         #endregion
     }
 }
