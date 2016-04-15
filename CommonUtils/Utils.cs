@@ -64,6 +64,21 @@ namespace CommonUtils
             var val = GetClassesRootVal(Path,Name);
             return string.IsNullOrEmpty(val) ? null : regxExePath.IsMatch(val) ? regxExePath.Match(val).Value : null;
         }
+        /// <summary>
+        /// if val=C:\hello\hello.exe and exeName=bye.exe
+        /// then i will check(C:\hello\bye.exe) is exists
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="exeName"></param>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public static string GetSameLevelAndCheck(string path,string exeName, string Name = null)
+        {
+            var val = GetExePath(path, Name);
+            if (string.IsNullOrEmpty(val)) return null;
+            var sp = Path.GetDirectoryName(val) + "\\" + exeName;
+            return File.Exists(sp) ? sp : null;
+        }
         public static string GetFileVersion(string Path)
         {
             return System.Diagnostics.FileVersionInfo.GetVersionInfo(Path).FileVersion;
@@ -173,6 +188,38 @@ namespace CommonUtils
         }
         #endregion
 
+        #region Hash
+        public static string MD5_Hash(string str_md5_in,bool remove = true)
+        {
+            var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            byte[] bytes_md5_in = Encoding.Default.GetBytes(str_md5_in);
+            byte[] bytes_md5_out = md5.ComputeHash(bytes_md5_in);
+            string str_md5_out = BitConverter.ToString(bytes_md5_out);
+            if(remove) str_md5_out = str_md5_out.Replace("-", "");
+            return str_md5_out;
+        }
+
+        public static string SHA1_Hash(string str_sha1_in, bool remove = true)
+        {
+            var sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+            byte[] bytes_sha1_in = Encoding.Default.GetBytes(str_sha1_in);
+            byte[] bytes_sha1_out = sha1.ComputeHash(bytes_sha1_in);
+            string str_sha1_out = BitConverter.ToString(bytes_sha1_out);
+            if (remove) str_sha1_out = str_sha1_out.Replace("-", "");
+            return str_sha1_out;
+        }
+
+        public static string SHA1_HashFile(string str_sha1_in, bool remove = true)
+        {
+            var sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider();
+            byte[] bytes_sha1_in = File.ReadAllBytes(str_sha1_in);
+            byte[] bytes_sha1_out = sha1.ComputeHash(bytes_sha1_in);
+            string str_sha1_out = BitConverter.ToString(bytes_sha1_out);
+            if (remove) str_sha1_out = str_sha1_out.Replace("-", "");
+            return str_sha1_out;
+        }
+        #endregion
+
         #region Other
         public static ushort GetImageArchitecture(string filepath)
         {
@@ -230,6 +277,86 @@ namespace CommonUtils
             }
             return isAdmin;
         }
+
+        private const string c7z = "x \"{0}\" -o\"{1}\" -aoa -y";
+        private const string crar = "x -y \"{0}\" \"{1}\"";
+
+        public static void Extract(string file, string destinationPath, bool silence = true)
+        {
+            if (!Directory.Exists(destinationPath)) Directory.CreateDirectory(destinationPath);
+            var extractor = new System.Diagnostics.ProcessStartInfo(Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\7za.exe",string.Format(c7z,file,destinationPath));
+            bool isRAR = false;
+            if (!File.Exists(extractor.FileName))
+            {
+                var z7 = GetSameLevelAndCheck("7-Zip.7z\\shell\\open\\command",silence? "7z.exe" : "7zG.exe");
+                if (z7 != null) extractor.FileName = z7;
+            }
+            if (!File.Exists(extractor.FileName))
+            {
+                var rar = GetSameLevelAndCheck("WinRAR\\shell\\open\\command", "winrar.exe");
+                if (rar != null)
+                {
+                    isRAR = true;
+                    extractor.FileName = rar;
+                    extractor.Arguments = string.Format(crar, file, destinationPath);
+                }
+            }
+            if (!File.Exists(extractor.FileName)) using (var wc = new WebClient()) wc.DownloadFile($"http://static.pzhacm.org/exe{(Win32Api.Is64BitOperatingSystem ? "/x64" : "")}/7za.exe", extractor.FileName);
+            if (!File.Exists(extractor.FileName)) throw new Exception("extractor disappeared!");
+            if (isRAR)
+            {
+                if (silence)
+                {
+                    using (var desktop = Onyeyiri.Desktop.CreateDesktop("chromeextract"))
+                    {
+                        var p = desktop.CreateProcess(extractor.FileName + " " + extractor.Arguments);
+                        p?.WaitForExit();
+                        desktop.Close();
+                    }
+                }
+                else
+                {
+                    var proc = System.Diagnostics.Process.Start(extractor);
+                    if (proc != null)
+                    {
+                        proc.WaitForHandel();
+                        proc.FuckCancel();
+                        proc.WaitForExit();
+                    }
+                }
+            }
+            else
+            {
+                if (silence)
+                {
+                    extractor.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    extractor.CreateNoWindow = true;
+                    extractor.UseShellExecute = false;
+                    extractor.RedirectStandardError = true;
+                    System.Diagnostics.Process.Start(extractor)?.WaitForExit();
+                }
+                else
+                {
+                    var proc = System.Diagnostics.Process.Start(extractor);
+                    if (proc != null)
+                    {
+                        proc.WaitForHandel();
+                        proc.FuckCancel();
+
+                        var sb = new StringBuilder(20);
+                        do
+                        {
+                            if (proc.HasExited)
+                                break;
+                            Win32Api.SendMessage(proc.MainWindowHandle, 0x000D, (IntPtr)sb.Capacity, sb);
+                            System.Threading.Thread.Sleep(100);
+                        } while (sb.Length <= 0 || !(sb[0] == '1' & sb[1] == '0' & sb[2] == '0'));
+                        if (!proc.HasExited) proc.Kill();
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }
