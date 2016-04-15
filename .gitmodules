@@ -1,0 +1,16 @@
+[submodule "3rd/simplejson"]
+	path = 3rd/simplejson
+	url = git@github.com:facebook-csharp-sdk/simple-json.git
+	ignore = dirty
+[submodule "3rd/mahapps"]
+	path = 3rd/mahapps
+	url = git@github.com:MahApps/MahApps.Metro.git
+	ignore = dirty
+[submodule "3rd/folderbrowser"]
+	path = 3rd/folderbrowser
+	url = git@github.com:TkYu/WpfFolderBrowser.git
+	ignore = dirty
+[submodule "3rd/vdesktop"]
+	path = 3rd/vdesktop
+	url = git@github.com:TkYu/DesktopSwitching.git
+	ignore = dirty
