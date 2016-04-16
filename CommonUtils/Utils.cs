@@ -244,7 +244,7 @@ namespace CommonUtils
             }
         }
         //public const ushort PE32 = 0x10b;
-        public const ushort PE32P = 0x20b;
+        internal const ushort PE32P = 0x20b;
         public static bool IsX64Image(string filepath)
         {
 
