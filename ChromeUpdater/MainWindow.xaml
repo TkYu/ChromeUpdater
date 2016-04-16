@@ -4,6 +4,7 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:behaviours="clr-namespace:ChromeUpdater"
                       mc:Ignorable="d"
                       Title="CU#"
                       Height="500" Width="813"
@@ -66,21 +67,30 @@
                          Text="{Binding ChromePath, Mode=TwoWay}"
                          Controls:TextBoxHelper.ButtonCommand="{Binding CmdFolderBrowse, Mode=OneWay}"
                          Controls:TextBoxHelper.Watermark="Chrome安装路径" />
-                <Button Grid.Row="0" Grid.Column="1" FontFamily="Microsoft YaHei UI Light,Microsoft YaHei UI,微软雅黑" Name="BtnQuery"
+                <Button Grid.Row="0" Grid.Column="1" FontFamily="Microsoft YaHei UI Light,Microsoft YaHei UI,微软雅黑"
+                        Name="BtnQuery"
                         Width="100"
                         Style="{DynamicResource SquareButtonStyle}"
-                        Command="{Binding CmdDoQuery, Mode=OneWay}" IsEnabled="{Binding IsReady}"
+                        Command="{Binding CmdDoQuery, Mode=OneWay}"
+                        CommandParameter="{Binding ElementName=cmbBranch,Path=Text}"
+                        IsEnabled="{Binding IsReady}"
                         Height="27" Content="查询" Margin="0,5,10,5" />
                 <GroupBox Grid.Row="1" Margin="10,5,10,5" IsEnabled="{Binding IsReady}" Grid.Column="0" Header="结果">
-                    <DataGrid x:Name="AzureDataGrid"
-                              Margin="5"
-                              AutoGenerateColumns="False"
-                              ItemsSource="{Binding Path=Albums}"
-                              Style="{DynamicResource AzureDataGrid}">
-                        <DataGrid.Columns>
-                            
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <ListBox x:Name="lstResult" ItemsSource="{Binding CurrUrls}" FontFamily="Microsoft YaHei UI">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="mnuCopy" Header="复制" IsEnabled="{Binding IsReady}"
+                                          Command="{Binding CopyToClipboard, Mode=OneWay}"
+                                          CommandParameter="{Binding ElementName=cmbBranch, Path=Text}" />
+                                <MenuItem x:Name="mnuDownload" Header="下载" IsEnabled="{Binding IsReady}"
+                                          Command="{Binding Download, Mode=OneWay}"
+                                          CommandParameter="{Binding ElementName=lstResult, Path=SelectedItem}" />
+                                <MenuItem x:Name="mnuExtract" Header="解压" IsEnabled="{Binding IsReady}"
+                                          Command="{Binding Extract, Mode=OneWay}"
+                                          CommandParameter="{Binding ElementName=lstResult, Path=SelectedItem}" />
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
                 </GroupBox>
                 <GroupBox Header="选项" Margin="0,5,10,5" IsEnabled="{Binding IsReady}" Grid.Row="1" Grid.Column="1">
                     <StackPanel>
@@ -88,19 +98,41 @@
                         <Controls:ToggleSwitch x:Name="enabledSwitch"
                                                Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}"
                                                HorizontalContentAlignment="Center"
-                                               IsChecked="False"
+                                               IsChecked="{Binding IsX64}"
                                                OffLabel="X86"
                                                OnLabel="X64" />
                         <Label Content="分支：" Margin="0,15,0,0" FontSize="15" />
+                        <ComboBox x:Name="cmbBranch"
+                                  SelectedIndex="0"
+                                  IsEditable="False" HorizontalAlignment="Center" Height="10" VerticalAlignment="Top"
+                                  Width="80">
+                            <ComboBoxItem Content="Stable" />
+                            <ComboBoxItem Content="Beta" />
+                            <ComboBoxItem Content="Dev" />
+                            <ComboBoxItem Content="Canary" />
+                        </ComboBox>
                     </StackPanel>
                 </GroupBox>
             </Grid>
             <StatusBar Grid.Row="1" Height="26" VerticalAlignment="Bottom">
-                <StatusBarItem x:Name="txtUp" Content="当前Chrome版本：" />
-                <StatusBarItem x:Name="txtVersion" Content="未知" />
+                <StatusBarItem>当前查询源:</StatusBarItem>
+                <StatusBarItem x:Name="tsStatus">
+                    <StatusBarItem.Style>
+                        <Style TargetType="{x:Type StatusBarItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanUseGoogle}" Value="True">
+                                    <Setter Property="Content" Value="谷歌官方" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CanUseGoogle}" Value="False">
+                                    <Setter Property="Content" Value="耍下API" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StatusBarItem.Style>
+                </StatusBarItem>
                 <Separator Style="{StaticResource MetroStatusBarSeparator}" />
-                <StatusBarItem>当前状态:</StatusBarItem>
-                <StatusBarItem x:Name="tsStatus" Content="耍下流群"/>
+                <StatusBarItem x:Name="txtUp" Content="当前Chrome版本：" />
+                <StatusBarItem x:Name="txtVersion" Content="{Binding CurrVersion}" />
             </StatusBar>
         </Grid>
     </Controls:MetroContentControl>
