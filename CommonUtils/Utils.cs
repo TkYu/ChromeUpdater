@@ -105,7 +105,6 @@ namespace CommonUtils
             return false;
         }
 
-
         public static async Task<CUnit> GetUpdateFromGoogle(string Branch, string Arch, int timeout = 8000)
         {
             CUnit cu = null;
@@ -180,6 +179,7 @@ namespace CommonUtils
             var str = await hc.GetStringAsync($"https://api.shuax.com/tools/getchrome/json?g={Guid.NewGuid().ToString("N")}");
             return SimpleJson.SimpleJson.DeserializeObject<ChromeUpdateRss>(str);
         }
+
         public static async Task<GCUpdateRss> GetGCVersion(int timeout = 5000)
         {
             var hc = new HttpClient { Timeout = TimeSpan.FromMilliseconds(timeout) };

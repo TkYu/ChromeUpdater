@@ -2,6 +2,43 @@
 
 bla bla bla bla
 
+## What's this ?
+
+This is a very simple tool, you can get the newest google chrome download link.
+
+###Projects:
+
+####*CommonUtils
+Core functions class library, you can :
+
+* Use Utils.Ping to ping somebody.
+* Use Utils.CanUseGoogle to chech google is available.
+* Use Utils.GetUpdateFromGoogle to get chrome download links.
+* Use Utils.GetUpdateFromShuax to get chrome download links in China.
+* Use Utils.Extract to extract a compressed file. (if you have 7-zip or WinRAR, it will invoke automatic)
+
+####*ChromeUpdater
+This is a sample project to show u how CommonUtils works.
+
+![cus](https://cloud.githubusercontent.com/assets/2945229/14580968/f7b88734-0394-11e6-8ad9-b4630e8e8d16.jpg)
+
+You can compile it to try it yourself.
+
+1) Get source code
+
+    git clone https://github.com/TkYu/ChromeUpdater.git
+    cd ChromeUpdater
+    git submodule init
+    git submodule update
+    
+2) Compile
+
+  a) Open ChromeUpdater.sln with Visual Studio 2015.
+	 
+  b) F5
+
+PS:This is a MVVM project.
+
 ## Licence
 
 Microsoft Public License (Ms-PL)
