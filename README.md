@@ -34,8 +34,10 @@ You can compile it to try it yourself.
 2) Compile
 
   a) Open ChromeUpdater.sln with Visual Studio 2015.
-	 
-  b) F5
+
+  b) Set ChromeUpdater as StartUp Project
+
+  c) Ctrl + F5 or F5
 
 PS:This is a MVVM project.
 
