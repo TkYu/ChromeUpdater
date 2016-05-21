@@ -90,9 +90,9 @@ namespace CommonUtils
             cd = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\chrome.exe";
             if (File.Exists(cd)) return cd;
             cd = GetExePath("http\\shell\\open\\command");
-            if (!string.IsNullOrEmpty(cd) && cd.IndexOf("chrome.exe", StringComparison.OrdinalIgnoreCase) >= 0) return cd;
+            if (!string.IsNullOrEmpty(cd) && cd.IndexOf("\\chrome.exe", StringComparison.OrdinalIgnoreCase) >= 0) return cd;
             cd = GetExePath("ChromeHTML\\shell\\open\\command");
-            if (!string.IsNullOrEmpty(cd) && cd.IndexOf("chrome.exe", StringComparison.OrdinalIgnoreCase) >= 0) return cd;
+            if (!string.IsNullOrEmpty(cd) && cd.IndexOf("\\chrome.exe", StringComparison.OrdinalIgnoreCase) >= 0) return cd;
             return null;
         }
         public static bool IsBiggerVersion(string v1, string v2)
