@@ -2,10 +2,6 @@
 	path = 3rd/simplejson
 	url = git@github.com:facebook-csharp-sdk/simple-json.git
 	ignore = dirty
-[submodule "3rd/mahapps"]
-	path = 3rd/mahapps
-	url = git@github.com:MahApps/MahApps.Metro.git
-	ignore = dirty
 [submodule "3rd/folderbrowser"]
 	path = 3rd/folderbrowser
 	url = git@github.com:TkYu/WpfFolderBrowser.git
