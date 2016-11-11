@@ -95,13 +95,19 @@ namespace CommonUtils
             if (!string.IsNullOrEmpty(cd) && cd.IndexOf("\\chrome.exe", StringComparison.OrdinalIgnoreCase) >= 0) return cd;
             return null;
         }
+
         public static bool IsBiggerVersion(string v1, string v2)
         {
             var splv1 = v1.Split('.');
             var splv2 = v2.Split('.');
             var lt = Math.Min(splv1.Length, splv2.Length);
             for (var i = 0; i < lt; i++)
-                if (int.Parse(splv2[i]) > int.Parse(splv1[i])) return true;
+            {
+                if (int.Parse(splv2[i]) > int.Parse(splv1[i]))
+                    return true;
+                if (int.Parse(splv2[i]) < int.Parse(splv1[i]))
+                    return false;
+            }
             return false;
         }
 
