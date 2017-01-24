@@ -27,9 +27,6 @@ You can compile it to try it yourself.
 1) Get source code
 
     git clone https://github.com/TkYu/ChromeUpdater.git
-    cd ChromeUpdater
-    git submodule init
-    git submodule update
     
 2) Compile
 
