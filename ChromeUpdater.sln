@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeUpdaterCore", "ChromeUpdaterCore\ChromeUpdaterCore.csproj", "{F51105DC-8B81-46AC-BD83-DD1139E398F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeUpdater.ArthasUI", "ChromeUpdater.ArthasUI\ChromeUpdater.ArthasUI.csproj", "{56D33FBA-FDC4-4D62-A7A5-B0E2EF0C6039}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F51105DC-8B81-46AC-BD83-DD1139E398F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F51105DC-8B81-46AC-BD83-DD1139E398F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F51105DC-8B81-46AC-BD83-DD1139E398F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F51105DC-8B81-46AC-BD83-DD1139E398F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56D33FBA-FDC4-4D62-A7A5-B0E2EF0C6039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56D33FBA-FDC4-4D62-A7A5-B0E2EF0C6039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56D33FBA-FDC4-4D62-A7A5-B0E2EF0C6039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56D33FBA-FDC4-4D62-A7A5-B0E2EF0C6039}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

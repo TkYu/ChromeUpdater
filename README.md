@@ -1,26 +1,33 @@
 ## FOR AZEROTH !!!
 
-bla bla bla bla bla
+秋深し　情けは人の　ためならず
 
 ## What's this ?
 
-This is a very simple tool, you can get the newest google chrome download link.
+This is a very simple chrome updater.
 
 ###Projects:
 
-####*CommonUtils
+####*ChromeUpdaterCore
 Core functions class library, you can :
 
-* Use Utils.Ping to ping somebody.
-* Use Utils.CanUseGoogle to chech google is available.
-* Use Utils.GetUpdateFromGoogle to get chrome download links.
-* Use Utils.GetUpdateFromShuax to get chrome download links in China.
-* Use Utils.Extract to extract a compressed file. (if you have 7-zip or WinRAR, it will invoke automatic)
+* Use ChromeUpdaterCore.GetUpdateFromGoogle to get chrome download links.
+* Use ChromeUpdaterCore.GetUpdateFromShuax to get chrome download links in China.
+* Use ChromeUpdaterCore.DownloadFile to download a file and check sha1.
+* Use ChromeUpdaterCore.Extract to extract a compressed file. (if you have 7-zip or WinRAR, it will invoke automatic)
 
-####*ChromeUpdater
-This is a sample project to show u how CommonUtils works.
+**AND**
+Binding a ChromeUpdaterCore instance to wpf DataContext :
 
-![cus](https://cloud.githubusercontent.com/assets/2945229/14580968/f7b88734-0394-11e6-8ad9-b4630e8e8d16.jpg)
+* Binding CmdCheckUpdate command for check update.
+* Binding CmdDownload command for download chrome installer.
+* Binding CmdDownloadAndExtract command for download chrome installer and extract that.
+* Binding CmdCopyToClipboard command for copy something to clipboard.
+
+####*ChromeUpdater.ArthasUI
+This is a sample project to show u how ChromeUpdaterCore works.
+
+![](preview.png)
 
 You can compile it to try it yourself.
 
@@ -30,9 +37,9 @@ You can compile it to try it yourself.
     
 2) Compile
 
-  a) Open ChromeUpdater.sln with Visual Studio 2015.
+  a) Open ChromeUpdater.sln with Visual Studio 2017.
 
-  b) Set ChromeUpdater as StartUp Project
+  b) Set ChromeUpdater.ArthasUI as StartUp Project
 
   c) Ctrl + F5 or F5
 
