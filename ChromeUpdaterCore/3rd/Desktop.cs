@@ -633,7 +633,9 @@ namespace Onyeyiri
         public static Desktop GetCurrent()
         {
             // get the desktop.
+#pragma warning disable 618
             return new Desktop(GetThreadDesktop(AppDomain.GetCurrentThreadId()));
+#pragma warning restore 618
         }
 
         /// <summary>

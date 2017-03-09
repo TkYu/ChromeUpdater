@@ -29,7 +29,12 @@ This is a sample project to show u how ChromeUpdaterCore works.
 
 ![](preview.png)
 
-You can compile it to try it yourself.
+####*ChromeUpdater.MahAppsUI
+You can choose this if you more like MahApps.Metro
+
+![](https://cloud.githubusercontent.com/assets/2945229/14580968/f7b88734-0394-11e6-8ad9-b4630e8e8d16.jpg)
+
+###You can compile these to try it by yourself.
 
 1) Get source code
 

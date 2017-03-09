@@ -279,6 +279,7 @@ namespace ChromeUpdater
                 if (!File.Exists(file))
                     await DownloadFile(UpdateInfo.url[0], UpdateInfo.name, UpdateInfo.sha1, _downloadProgress);
                 DownloadPercent = -1;
+                if (UpdateInfo.version == CurrentChromeInfo.Version) return;
                 if (File.Exists(file))
                 {
                     var c7z = Path.Combine(SelectedPath, "chrome.7z");
@@ -380,7 +381,15 @@ namespace ChromeUpdater
         private ICommand _cmdCopyToClipboard;
         public ICommand CmdCopyToClipboard => _cmdCopyToClipboard ?? (_cmdCopyToClipboard = new AsyncCommand<string>(async str =>
         {
-            Clipboard.SetText(str);
+            if (string.IsNullOrEmpty(str))
+            {
+                if (UpdateInfo != null)
+                    Clipboard.SetText(UpdateInfo.url[0]);
+            }
+            else
+            {
+                Clipboard.SetText(str);
+            }
             await Task.Delay(1);
         }));
         #endregion

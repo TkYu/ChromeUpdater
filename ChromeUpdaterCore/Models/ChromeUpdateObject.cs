@@ -4,10 +4,10 @@ namespace ChromeUpdater
 {
     public class ChromeUpdate
     {
-        public AppUpdateWithArch Stable;
-        public AppUpdateWithArch Beta;
-        public AppUpdateWithArch Dev;
-        public AppUpdateWithArch Canary;
+        public AppUpdateWithArch Stable { get; set; }
+        public AppUpdateWithArch Beta { get; set; }
+        public AppUpdateWithArch Dev { get; set; }
+        public AppUpdateWithArch Canary { get; set; }
 
         public Dictionary<string, AppUpdateWithArch> ToDictionary()
         {
@@ -58,19 +58,19 @@ namespace ChromeUpdater
     
     public class AppUpdateWithArch
     {
-        public AppUpdate x64;
-        public AppUpdate x86;
+        public AppUpdate x64 { get; set; }
+        public AppUpdate x86 { get; set; }
     }
 
     public class AppUpdate
     {
-        public string[] url;
-        public long size;
-        public decimal time;
-        public string version;
-        public string name;
-        public string cdn;
-        public string sha1;
-        public string sha256;
+        public string[] url { get; set; }
+        public long size { get; set; }
+        public decimal time { get; set; }
+        public string version { get; set; }
+        public string name { get; set; }
+        public string cdn { get; set; }
+        public string sha1 { get; set; }
+        public string sha256 { get; set; }
     }
 }

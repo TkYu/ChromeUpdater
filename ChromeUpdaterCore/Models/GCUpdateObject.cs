@@ -2,22 +2,22 @@
 {
     public class GreenChromeUpdate
     {
-        public float verison;//WTF???
-        public string version;
-        public string description;
-        public GreenChromeWithArch link;
+        public float verison { get; set; }//WTF???
+        public string version { get; set; }
+        public string description { get; set; }
+        public GreenChromeWithArch link { get; set; }
     }
 
     public class GreenChromeWithArch
     {
-        public GreenChrome x86;
-        public GreenChrome x64;
+        public GreenChrome x86 { get; set; }
+        public GreenChrome x64 { get; set; }
     }
 
     public class GreenChrome
     {
-        public string url;
-        public string sha1;
+        public string url { get; set; }
+        public string sha1 { get; set; }
 
         public string GetFileName()
         {
