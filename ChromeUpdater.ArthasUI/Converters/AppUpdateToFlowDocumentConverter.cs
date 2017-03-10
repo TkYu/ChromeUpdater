@@ -52,32 +52,43 @@ namespace ChromeUpdater.ArthasUI.Converters
                         doc.AddLine($"您当前的chrome版本：{vm.CurrentChromeInfo} 是最新的！", FlowDocumentExt.Blue);
                     }
                 }
+                else
+                {
+                    if (System.IO.Directory.GetFiles(vm.SelectedPath).Length > 0)
+                    {
+                        doc.AddLine("请注意，您选择的文件夹不为空并且里面没有找到chrome，请重新选择一个文件夹！", FlowDocumentExt.Yellow);
+                    }
+                    else
+                    {
+                        canExtract = true;
+                    }
+                }
                 doc.AddLine($"\n查询到的信息({vm.BranchSelected}/{(vm.IsX64Selected ? "x64" : "x86")})：\n", FlowDocumentExt.Blue);
                 doc.Add(result.ToString(), FlowDocumentExt.Blue);
                 if (canWrite && canExtract)
                 {
-                    doc.Add("  下载并解压:", FlowDocumentExt.Blue);
+                    doc.Add("  下载安装包并解压:", FlowDocumentExt.Blue);
                     doc.AddImage(Arthas.Utility.Media.ResObj.GetImageSource(System.Reflection.Assembly.GetExecutingAssembly(), "Resources.icon-download-e.png"), () =>
                     {
                         vm.CmdDownloadAndExtract.Execute(null);
                     });
                 }
-                if (ChromeUpdaterCore.Writeable)
+            }
+            if (ChromeUpdaterCore.Writeable)
+            {
+                doc.Add(" 下载安装包:", FlowDocumentExt.Blue);
+                doc.AddImage(Arthas.Utility.Media.ResObj.GetImageSource(System.Reflection.Assembly.GetExecutingAssembly(), "Resources.icon-download.png"), () =>
                 {
-                    doc.Add(" 仅下载:", FlowDocumentExt.Blue);
-                    doc.AddImage(Arthas.Utility.Media.ResObj.GetImageSource(System.Reflection.Assembly.GetExecutingAssembly(), "Resources.icon-download.png"), () =>
-                    {
-                        vm.CmdDownload.Execute(null);
-                    });
-                }
-                doc.AddLine("");
-                foreach (var s in result.url)
+                    vm.CmdDownload.Execute(null);
+                });
+            }
+            doc.AddLine("");
+            foreach (var s in result.url)
+            {
+                doc.AddLine(s, null, () =>
                 {
-                    doc.AddLine(s, null, () =>
-                    {
-                        vm.CmdCopyToClipboard.Execute(s);
-                    });
-                }
+                    vm.CmdCopyToClipboard.Execute(s);
+                });
             }
             return doc;
 

@@ -173,7 +173,7 @@ namespace ChromeUpdater
 
         private void SaveBranch()
         {
-            if (BranchSelected == CurrentChromeInfo.Branch) return;
+            if (BranchSelected == CurrentChromeInfo?.Branch) return;
             if (!string.IsNullOrEmpty(SelectedPath) && HasWriteAccess(SelectedPath))
             {
                 File.WriteAllText($"{SelectedPath}\\branch", BranchSelected.ToString());
@@ -212,9 +212,9 @@ namespace ChromeUpdater
                         if (Enum.TryParse(ini.Read("检查版本", "检查更新"), out Branch b))
                             bch = b;
                     }
-                    IsX64Selected = IsX64Image(chromeExePath);
-                    CurrentChromeInfo = new ChromeInfo(version.FileVersion, IsX64Selected, bch);
-
+                    var ix = IsX64Image(chromeExePath);
+                    CurrentChromeInfo = new ChromeInfo(version.FileVersion, ix, bch);
+                    IsX64Selected = ix;
                 }
                 else
                 {
@@ -308,8 +308,23 @@ namespace ChromeUpdater
                 if (!File.Exists(file))
                     await DownloadFile(UpdateInfo.url[0], UpdateInfo.name, UpdateInfo.sha1, _downloadProgress);
                 DownloadPercent = -1;
-                
-                var canExtract = IsX64Selected != CurrentChromeInfo.IsX64 || BranchSelected != CurrentChromeInfo.Branch || IsBiggerVersion(CurrentChromeInfo.Version, UpdateInfo.version);
+                bool canExtract = false;
+                if (Directory.GetFiles(SelectedPath).Length > 0)
+                {
+                    if (CurrentChromeInfo != null)
+                    {
+                        canExtract = IsX64Selected != CurrentChromeInfo.IsX64 || BranchSelected != CurrentChromeInfo.Branch || IsBiggerVersion(CurrentChromeInfo.Version, UpdateInfo.version);
+                    }
+                    else
+                    {
+                        await MsgBox("请注意，您选择的文件夹不为空并且里面没有找到chrome，请重新选择一个文件夹！");
+                        return;
+                    }
+                }
+                else
+                {
+                    canExtract = true;
+                }
                 if (!canExtract)
                 {
                     await MsgBox("更新包的版本和您本地的版本一致，不需要再次覆盖！", "提示");
