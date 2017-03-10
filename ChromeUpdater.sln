@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeUpdater.ArthasUI", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeUpdater.MahAppsUI", "ChromeUpdater.MahAppsUI\ChromeUpdater.MahAppsUI.csproj", "{7D101867-6051-4DD6-9C25-1C9A05A76935}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChromeUpdater.BasicWPFUI", "ChromeUpdater.BasicWPFUI\ChromeUpdater.BasicWPFUI.csproj", "{039D5EAF-08EC-42BB-BFEA-A451853F27C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7D101867-6051-4DD6-9C25-1C9A05A76935}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D101867-6051-4DD6-9C25-1C9A05A76935}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D101867-6051-4DD6-9C25-1C9A05A76935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039D5EAF-08EC-42BB-BFEA-A451853F27C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039D5EAF-08EC-42BB-BFEA-A451853F27C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039D5EAF-08EC-42BB-BFEA-A451853F27C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039D5EAF-08EC-42BB-BFEA-A451853F27C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
