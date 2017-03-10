@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Arthas.Controls.Metro;
+using ChromeUpdater.Services;
 
 namespace ChromeUpdater.ArthasUI
 {
@@ -46,6 +47,12 @@ namespace ChromeUpdater.ArthasUI
         private void TxtPath_OnButtonClick(object sender, EventArgs e)
         {
             ((ChromeUpdaterCore)DataContext).CmdFolderBrowse.Execute(null);
+        }
+
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            //init messageservice here
+            ServiceManager.Instance.AddService<IMessageService>(new MessageService(this));
         }
     }
 }

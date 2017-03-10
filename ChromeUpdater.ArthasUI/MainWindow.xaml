@@ -8,7 +8,7 @@
         xmlns:updater="clr-namespace:ChromeUpdater;assembly=ChromeUpdaterCore"
         xmlns:converters="clr-namespace:ChromeUpdater.ArthasUI.Converters"
         Name="WndMain" Icon="Images/icon-alpha.png" Title="{Binding Title}" BorderBrush="#00a0e9"
-        FontFamily="Microsoft YaHei UI,微软雅黑" FontSize="13" BorderThickness="1" Height="500" Width="813">
+        FontFamily="Microsoft YaHei UI,微软雅黑" FontSize="13" BorderThickness="1" Height="500" Width="813" Loaded="MainWindow_OnLoaded">
     <arthas:MetroWindow.DataContext>
         <updater:ChromeUpdaterCore/>
     </arthas:MetroWindow.DataContext>

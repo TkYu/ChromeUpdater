@@ -11,7 +11,7 @@
         mc:Ignorable="d" ShowTitleBar="True" Name="wndMain"
         TextOptions.TextFormattingMode="Display" ShowIconOnTitleBar="True" WindowStartupLocation="CenterScreen"
         Height="500" Width="813" SnapsToDevicePixels="True" BorderBrush="#00a0e9" GlowBrush="#00a0e9" NonActiveGlowBrush="Gray" Icon="icon-alpha.png"
-        FontFamily="Microsoft YaHei UI,微软雅黑" FontSize="12" Title="{Binding Title}">
+        FontFamily="Microsoft YaHei UI,微软雅黑" FontSize="12" Title="{Binding Title}" Loaded="MainWindow_OnLoaded">
     <mahApps:MetroWindow.DataContext>
         <updater:ChromeUpdaterCore/>
     </mahApps:MetroWindow.DataContext>
@@ -70,21 +70,24 @@
                         CommandParameter="{Binding ElementName=cmbBranch,Path=Text}"
                         IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}"
                         Height="27" Content="查询" Margin="0,5,10,5" />
-                <GroupBox Grid.Row="1" Margin="10,5,10,5" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}" Grid.Column="0" Header="结果">
-                    <ListBox x:Name="lstResult" ItemsSource="{Binding UpdateInfo.url}">
-                        <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem x:Name="mnuCopy" Header="复制" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}"
+                <GroupBox Grid.Row="1" Margin="10,5,10,5" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}" Grid.Column="0" Header="查询结果">
+                    <StackPanel>
+                        <TextBlock Text="{Binding UpdateInfo}"></TextBlock>
+                        <ListBox x:Name="lstResult" ItemsSource="{Binding UpdateInfo.url}">
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem x:Name="mnuCopy" Header="复制" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}"
                                           Command="{Binding CmdCopyToClipboard, Mode=OneWay}" CommandParameter="{Binding ElementName=lstResult, Path=SelectedItem}" />
-                                <MenuItem x:Name="mnuDownload" Header="仅下载" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}"
+                                    <MenuItem x:Name="mnuDownload" Header="仅下载" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}"
                                           Command="{Binding CmdDownload, Mode=OneWay}"
                                           CommandParameter="{Binding ElementName=lstResult, Path=SelectedItem}" />
-                                <MenuItem x:Name="mnuExtract" Header="下载&amp;解压" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}"
+                                    <MenuItem x:Name="mnuExtract" Header="下载&amp;解压" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}"
                                           Command="{Binding CmdDownloadAndExtract, Mode=OneWay}"
                                           CommandParameter="{Binding ElementName=lstResult, Path=SelectedItem}" />
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
-                    </ListBox>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                        </ListBox>
+                    </StackPanel>
                 </GroupBox>
                 <GroupBox Header="选项" Margin="0,5,10,5" IsEnabled="{Binding IsBusy,Converter={StaticResource InvertBoolConverter}}" Grid.Row="1" Grid.Column="1">
                     <StackPanel>

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
+using ChromeUpdater.Services;
 
 namespace ChromeUpdater
 {
@@ -42,7 +43,6 @@ namespace ChromeUpdater
 
         #region Properties
         
-
         private AppUpdate _updateInfo;
         public AppUpdate UpdateInfo
         {
@@ -138,6 +138,9 @@ namespace ChromeUpdater
             get { return _downloadPercent; }
             set { _downloadPercent = value; OnPropertyChanged(); }
         }
+
+        private IMessageService _messageService;
+        public IMessageService MessageService => _messageService ?? (_messageService = ServiceManager.Instance.IsServiceExists<IMessageService>() ? ServiceManager.Instance.GetService<IMessageService>() : null);
         #endregion
 
         #region Methods
@@ -224,6 +227,20 @@ namespace ChromeUpdater
                 Title = "ChromeUpdater - 请选择一个有效的文件夹";
             }
         }
+
+        private async Task ReportException(Exception ex)
+        {
+            if (MessageService != null)
+            {
+                if (await MessageService.ShowAsync($"遇到错误：{ex.Message}，请问是否要复制出错详情？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    Clipboard.SetText(ex.StackTrace);
+            }
+        }
+
+        private Task MsgBox(string text, string title = null)
+        {
+            return MessageService == null ? Task.Delay(5) : MessageService.ShowAsync(text, title);
+        }
         #endregion
 
         #region Commands
@@ -251,7 +268,11 @@ namespace ChromeUpdater
         public ICommand CmdDownload => _cmdDownload ?? (_cmdDownload = new AsyncCommand(async () =>
         {
             if (IsBusy) return;
-            if (UpdateInfo == null) return;
+            if (UpdateInfo == null)
+            {
+                await MsgBox("请先查询！");
+                return;
+            }
             IsBusy = true;
             try
             {
@@ -260,6 +281,10 @@ namespace ChromeUpdater
                     await DownloadFile(UpdateInfo.url[0], UpdateInfo.name, UpdateInfo.sha1, _downloadProgress);
                 if (File.Exists(file))
                     System.Diagnostics.Process.Start("Explorer.exe", $"/select,\"{file}\"");
+            }
+            catch (Exception ex)
+            {
+                await ReportException(ex);
             }
             finally 
             {
@@ -271,7 +296,11 @@ namespace ChromeUpdater
         public ICommand CmdDownloadAndExtract => _cmdDownloadAndExtract ?? (_cmdDownloadAndExtract = new AsyncCommand(async () =>
         {
             if (IsBusy) return;
-            if (UpdateInfo == null) return;
+            if (UpdateInfo == null)
+            {
+                await MsgBox("请先查询！");
+                return;
+            }
             IsBusy = true;
             try
             {
@@ -279,7 +308,13 @@ namespace ChromeUpdater
                 if (!File.Exists(file))
                     await DownloadFile(UpdateInfo.url[0], UpdateInfo.name, UpdateInfo.sha1, _downloadProgress);
                 DownloadPercent = -1;
-                if (UpdateInfo.version == CurrentChromeInfo.Version) return;
+                
+                var canExtract = IsX64Selected != CurrentChromeInfo.IsX64 || BranchSelected != CurrentChromeInfo.Branch || IsBiggerVersion(CurrentChromeInfo.Version, UpdateInfo.version);
+                if (!canExtract)
+                {
+                    await MsgBox("更新包的版本和您本地的版本一致，不需要再次覆盖！", "提示");
+                    return;
+                }
                 if (File.Exists(file))
                 {
                     var c7z = Path.Combine(SelectedPath, "chrome.7z");
@@ -327,12 +362,15 @@ namespace ChromeUpdater
                 LoadChromeInfo();
                 UpdateInfo = chromeUpdate?.GetUpdate(BranchSelected, IsX64Selected);
             }
+            catch (Exception ex)
+            {
+                await ReportException(ex);
+            }
             finally
             {
                 IsBusy = false;
             }
         }));
-
 
         private ICommand _cmdCheckGCUpdate;
         public ICommand CmdCheckGCUpdate => _cmdCheckGCUpdate ?? (_cmdCheckGCUpdate = new AsyncCommand(async () =>
@@ -342,6 +380,10 @@ namespace ChromeUpdater
             try
             {
                 GCUpdateInfo = await GetGCVersion();
+            }
+            catch (Exception ex)
+            {
+                await ReportException(ex);
             }
             finally
             {
@@ -372,6 +414,10 @@ namespace ChromeUpdater
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                await ReportException(ex);
+            }
             finally 
             {
                 IsBusy = false;
@@ -381,16 +427,24 @@ namespace ChromeUpdater
         private ICommand _cmdCopyToClipboard;
         public ICommand CmdCopyToClipboard => _cmdCopyToClipboard ?? (_cmdCopyToClipboard = new AsyncCommand<string>(async str =>
         {
-            if (string.IsNullOrEmpty(str))
+            try
             {
-                if (UpdateInfo != null)
-                    Clipboard.SetText(UpdateInfo.url[0]);
+                if (string.IsNullOrEmpty(str))
+                {
+                    if (UpdateInfo != null)
+                        Clipboard.SetText(UpdateInfo.url[0]);
+                }
+                else
+                {
+                    Clipboard.SetText(str);
+                }
+                if (MessageService != null)
+                    await MessageService.ShowAsync("复制成功", "提示");
             }
-            else
+            catch (Exception ex)
             {
-                Clipboard.SetText(str);
+                await ReportException(ex);
             }
-            await Task.Delay(1);
         }));
         #endregion
 

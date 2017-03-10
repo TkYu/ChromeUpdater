@@ -53,7 +53,7 @@ namespace ChromeUpdater.ArthasUI.Converters
                     }
                 }
                 doc.AddLine($"\n查询到的信息({vm.BranchSelected}/{(vm.IsX64Selected ? "x64" : "x86")})：\n", FlowDocumentExt.Blue);
-                doc.Add($"版本号{result.version}，大小{result.size}字节({result.size / 1024 / 1024}M)；", FlowDocumentExt.Blue);
+                doc.Add(result.ToString(), FlowDocumentExt.Blue);
                 if (canWrite && canExtract)
                 {
                     doc.Add("  下载并解压:", FlowDocumentExt.Blue);
@@ -75,15 +75,7 @@ namespace ChromeUpdater.ArthasUI.Converters
                 {
                     doc.AddLine(s, null, () =>
                     {
-                        try
-                        {
-                            vm.CmdCopyToClipboard.Execute(s);
-                            MessageBox.Show("复制完成", "copy", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                        catch
-                        {
-                            //TODO
-                        }
+                        vm.CmdCopyToClipboard.Execute(s);
                     });
                 }
             }

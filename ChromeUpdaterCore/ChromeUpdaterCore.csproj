@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +55,8 @@
     <Compile Include="Models\ChromeUpdateObject.cs" />
     <Compile Include="Models\GCUpdateObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IMessageService.cs" />
+    <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Win32Api.cs" />
     <Compile Include="Xunlei.cs" />
   </ItemGroup>

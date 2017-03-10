@@ -56,10 +56,13 @@ namespace ChromeUpdater
         internal static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, LoadLibraryFlags dwFlags);
 
         [DllImport("kernel32.dll")]
-        internal static extern IntPtr LoadLibrary(string path);
+        public static extern IntPtr LoadLibrary(string path);
 
         [DllImport("kernel32.dll")]
-        internal static extern bool FreeLibrary(IntPtr lib);
+        public static extern bool FreeLibrary(IntPtr lib);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
 
         public static string LoadRCString(string path, string lpName, string lpType)
         {

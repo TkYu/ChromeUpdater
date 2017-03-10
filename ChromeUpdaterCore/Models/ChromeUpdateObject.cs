@@ -72,5 +72,10 @@ namespace ChromeUpdater
         public string cdn { get; set; }
         public string sha1 { get; set; }
         public string sha256 { get; set; }
+
+        public override string ToString()
+        {
+            return $"版本号{version}，大小{size}字节(≈{size / 1024 / 1024}MB);";
+        }
     }
 }

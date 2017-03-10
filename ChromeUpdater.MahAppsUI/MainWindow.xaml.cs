@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ChromeUpdater.Services;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -42,6 +43,12 @@ namespace ChromeUpdater.MahAppsUI
         private async void ShowAbout(object sender, RoutedEventArgs e)
         {
             await this.ShowMessageAsync("呵呵", "呵呵呵呵呵, ㄏㄏ 。\r\nBy TsungKang\r\n3BDE89C4");
+        }
+
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            //init messageservice here
+            ServiceManager.Instance.AddService<IMessageService>(new MessageService(this));
         }
     }
 }
