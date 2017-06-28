@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using Arthas.Controls.Metro;
+﻿using Arthas.Controls.Metro;
 using Arthas.Utility.Media;
+using System;
+using System.Windows.Documents;
 
 namespace ChromeUpdater.ArthasUI
 {
@@ -32,7 +28,7 @@ namespace ChromeUpdater.ArthasUI
             Default.Add("进行交流。");
             Default.AddLine(Environment.NewLine);
             Default.Add("本工具发布地址为：");
-            Default.Add("http://iivb.net/chrome_update_tool.html", "http://iivb.net/chrome_update_tool.html");
+            Default.Add("https://csharp.love/chrome_update_tool.html", "https://csharp.love/chrome_update_tool.html");
         }
         public static FlowDocument Default { get; }
         public static void AddLine(this FlowDocument Document, string content = null, RgbaColor rgba = null, Action action = null)

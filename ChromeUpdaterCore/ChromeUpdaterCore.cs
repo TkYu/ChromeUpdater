@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChromeUpdater.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -12,7 +13,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
-using ChromeUpdater.Services;
 
 namespace ChromeUpdater
 {
@@ -42,7 +42,7 @@ namespace ChromeUpdater
         #endregion
 
         #region Properties
-        
+
         private AppUpdate _updateInfo;
         public AppUpdate UpdateInfo
         {
@@ -57,7 +57,7 @@ namespace ChromeUpdater
             set { _GCUpdateInfo = value; OnPropertyChanged(); }
         }
 
-        
+
 
         private ChromeInfo _currentChromeInfo;
         public ChromeInfo CurrentChromeInfo
@@ -286,7 +286,7 @@ namespace ChromeUpdater
             {
                 await ReportException(ex);
             }
-            finally 
+            finally
             {
                 IsBusy = false;
             }
@@ -404,7 +404,7 @@ namespace ChromeUpdater
             {
                 IsBusy = false;
             }
-            
+
         }));
 
         private ICommand _cmdDownloadGC;
@@ -416,7 +416,7 @@ namespace ChromeUpdater
             {
                 if (GCUpdateInfo != null)
                 {
-                    var arch = IsX64Image(Path.Combine(SelectedPath,"chrome.exe"));
+                    var arch = IsX64Image(Path.Combine(SelectedPath, "chrome.exe"));
                     var downloadUrl = arch ? GCUpdateInfo.link.x64.url : GCUpdateInfo.link.x86.url;
                     var sha1 = arch ? GCUpdateInfo.link.x64.sha1 : GCUpdateInfo.link.x86.sha1;
                     var gcName = arch ? GCUpdateInfo.link.x64.GetFileName() : GCUpdateInfo.link.x86.GetFileName();
@@ -433,7 +433,7 @@ namespace ChromeUpdater
             {
                 await ReportException(ex);
             }
-            finally 
+            finally
             {
                 IsBusy = false;
             }
@@ -444,14 +444,15 @@ namespace ChromeUpdater
         {
             try
             {
+                Clipboard.Clear();
                 if (string.IsNullOrEmpty(str))
                 {
                     if (UpdateInfo != null)
-                        Clipboard.SetText(UpdateInfo.url[0]);
+                        Clipboard.SetDataObject(UpdateInfo.url[0]);
                 }
                 else
                 {
-                    Clipboard.SetText(str);
+                    Clipboard.SetDataObject(str);
                 }
                 if (MessageService != null)
                     await MessageService.ShowAsync("复制成功", "提示");
@@ -567,7 +568,7 @@ namespace ChromeUpdater
             var hc = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
             try
             {
-                return SimpleJson.SimpleJson.DeserializeObject<ChromeUpdate>(await hc.GetStringAsync("http://api.pzhacm.org/iivb/cu.json"));
+                return SimpleJson.SimpleJson.DeserializeObject<ChromeUpdate>(await hc.GetStringAsync("https://api.pzhacm.org/iivb/cu.json"));
             }
             catch
             {
@@ -852,7 +853,7 @@ namespace ChromeUpdater
         public static string GetRelativePath(string filespec, string folder = null)
         {
             if (string.IsNullOrEmpty(folder)) folder = CD;
-             Uri pathUri = new Uri(filespec);
+            Uri pathUri = new Uri(filespec);
             // Folders must end in a slash
             if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {
